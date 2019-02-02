@@ -1,6 +1,8 @@
 <template>
   <v-card height="200px" flat>
-    <div class="headline text-xs-center pa-5">Active: {{ bottomNav }}</div>
+    <div class="headline text-xs-center pa-5">
+      
+    </div>
     <v-bottom-nav :active.sync="bottomNav" :value="true" fixed>
       <v-btn color="teal" @click="homeClicked" flat value="home">
         <span>Home</span>

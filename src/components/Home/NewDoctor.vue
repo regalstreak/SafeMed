@@ -18,7 +18,6 @@
           ></v-checkbox>
 
           <v-btn @click="submitShit">Submit</v-btn>
-
         </v-form>
       </v-flex>
     </v-layout>
@@ -57,10 +56,12 @@ export default {
           from: accounts[0],
           gasLimit: "4700000"
         })
-        .then(res => console.log(res))
+        .then(res => {
+          console.log(res);
+          this.$router.push("/");
+        })
         .catch(err => console.log(err));
       console.log(ourName);
-
     }
   },
   watch: {

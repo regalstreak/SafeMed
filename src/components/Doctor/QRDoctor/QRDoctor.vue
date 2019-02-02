@@ -1,13 +1,20 @@
 <template>
-  <div>
-    <p class="error">{{ error }}</p>
+  <v-container fill-height>
+    <v-layout justify-center wrap align-center>
+      <v-flex xs12 class="text-xs-center">
+        <qrcode-stream @decode="onDecode" @init="onInit"/>
+      </v-flex>
+      <v-flex xs12>
+        <div class="error">{{ error }}</div>
 
-    <p class="decode-result">
-      Last result:
-      <b>{{ result }}</b>
-    </p>
+        <div class="decode-result">
+          Last result:
+          <b>{{ result }}</b>
+        </div>
+      </v-flex>
+    </v-layout>
 
-    <qrcode-stream @decode="onDecode" @init="onInit"/>
+    <br>
 
     <v-bottom-nav :active.sync="bottomNav" :value="true" fixed>
       <v-btn color="teal" @click="homeClicked" flat value="home">
@@ -30,7 +37,7 @@
         <v-icon>person</v-icon>
       </v-btn>
     </v-bottom-nav>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -57,27 +64,36 @@ export default {
       this.$router.push("/doctor/account");
     },
     onDecode(result) {
-      this.result = result;
-      console.log(this.result);
-      this.addInContract();
+      // this.result = result;
+      let ourResultJson = JSON.parse(result);
+      console.log("CONTRACT:" + ourResultJson.contract);
+      console.log(ourResultJson.patient);
+
+      this.$store.commit("changeContractAddressState", ourResultJson.contract)
+      this.$store.commit("changePatientAddressState", ourResultJson.patient)
+
+      // this.addInContract(result);
+
+      this.$store.commit("mutateChangePatient", true);
+      this.$router.push("/patient");
     },
 
-    async addInContract() {
+    async addInContract(contr_result) {
       if (this.result != "0x0000000000000000000000000000000000000000") {
-        let result_contract = await factory.methods
-          ._patientsMapping(this.result)
-          .call();
+        // let result_contract = await factory.methods
+        //   ._patientsMapping(this.result)
+        //   .call();
         // let patientInst = patient(result_contract);
-        this.login(result_contract);
+        this.login(contr_result);
         this.result = "0x0000000000000000000000000000000000000000";
       }
     },
 
     async login(add) {
-        this.contractAddress=add;
-        this.$store.commit("changeContractAddressState",this.contractAddress);
-        this.$router.push("/patient");
-        return;
+      this.contractAddress = add;
+      this.$store.commit("changeContractAddressState", this.contractAddress);
+      this.$router.push("/patient");
+      return;
     },
 
     async onInit(promise) {
@@ -112,7 +128,7 @@ export default {
         return store.getters.contractAddressState;
       },
       set() {}
-    },
+    }
   },
   data() {
     return {

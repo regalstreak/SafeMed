@@ -11,9 +11,16 @@
           solo-inverted
         ></v-text-field>
 
-        <v-tabs grow slot="extension" v-model="tabs" centered color="transparent" slider-color="white">
+        <v-tabs
+          grow
+          slot="extension"
+          v-model="tabs"
+          centered
+          color="transparent"
+          slider-color="white"
+        >
           <v-tab>Medical Records</v-tab>
-          <v-tab>uploadeded Files</v-tab>
+          <v-tab>uploaded Files</v-tab>
         </v-tabs>
       </v-toolbar>
 
@@ -27,7 +34,7 @@
       </v-tabs-items>
     </div>
 
-    <v-bottom-nav :active.sync="bottomNav" :value="true" fixed >
+    <v-bottom-nav :active.sync="bottomNav" :value="true" fixed>
       <v-btn color="teal" @click="homeClicked" flat value="home">
         <span>Home</span>
         <v-icon>home</v-icon>
@@ -53,8 +60,8 @@
 
 <script>
 import store from "../../../store.js";
-import MedicalRecordsPatient from "./MedicalRecordsPatient"
-import UploadedFilesPatient from "./UploadedFilesPatient"
+import MedicalRecordsPatient from "./MedicalRecordsPatient";
+import UploadedFilesPatient from "./UploadedFilesPatient";
 export default {
   data() {
     return {

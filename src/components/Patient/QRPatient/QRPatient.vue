@@ -1,14 +1,10 @@
 <template>
-  <div>
-    <!-- <a href="https://imgbb.com/">
-      <img
-        src="https://i.ibb.co/NmqQvKq/photo-2019-01-06-09-06-50.jpg"
-        alt="photo-2019-01-06-09-06-50"
-        border="0"
-      >
-    </a>-->
-    <qrcode-vue :value="account" :size="100" level="H"></qrcode-vue>
-    {{ account }}
+  <v-container fill-height>
+    <v-layout row wrap align-center>
+      <v-flex class="text-xs-center">
+        <qrcode-vue :value="returnQRdata" :size="300" level="H"></qrcode-vue>
+      </v-flex>
+    </v-layout>
     <v-bottom-nav :active.sync="bottomNav" :value="true" fixed>
       <v-btn color="teal" @click="homeClicked" flat value="home">
         <span>Home</span>
@@ -30,7 +26,7 @@
         <v-icon>person</v-icon>
       </v-btn>
     </v-bottom-nav>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -40,7 +36,8 @@ import QrcodeVue from "qrcode.vue";
 export default {
   data() {
     return {
-      account: ""
+      account: "",
+      patientAccount: ""
     };
   },
   components: {
@@ -70,13 +67,25 @@ export default {
         return store.getters.bottomNavState;
       },
       set() {}
+    },
+    contractAddress: {
+      get() {
+        return store.getters.contractAddressState;
+      },
+      set() {}
+    },
+    returnQRdata() {
+      return JSON.stringify({
+        patient: this.patientAccount,
+        contract: this.contractAddress
+      });
     }
   },
 
-  async mounted() {
-    const accounts = await web3.eth.getAccounts();
-    this.account = accounts[0];
-    console.log("ACCOUNT: " + accounts[0]);
+  async created() {
+    console.log("CONTRACT ADDRESS OF PATIENT: " + this.contractAddress);
+    let accounts = await web3.eth.getAccounts();
+    this.patientAccount = accounts[0];
   }
 };
 </script>

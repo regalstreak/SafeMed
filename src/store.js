@@ -7,19 +7,29 @@ export default new Vuex.Store({
   state: {
     bottomNavState: "home",
     contractAddressState: "",
-    
+    patientAddressState: "",
+    changePatient: false
+
   },
   mutations: {
-    changeBottomNavState(state, bottomNavState){
+    changeBottomNavState(state, bottomNavState) {
       state.bottomNavState = bottomNavState;
     },
-    changeContractAddressState(state, contractAddressState){
+    changeContractAddressState(state, contractAddressState) {
       state.contractAddressState = contractAddressState;
-    }
+    },
+    changePatientAddressState(state, patientAddressState) {
+      state.patientAddressState = patientAddressState;
+    },
+    mutateChangePatient(state, changePatient) {
+      state.changePatient = changePatient;
+    },
   },
   getters: {
     bottomNavState: state => state.bottomNavState,
-    contractAddressState: state => state.contractAddressState
+    contractAddressState: state => state.contractAddressState,
+    patientAddressState: state => state.patientAddressState,
+    changePatient: state => state.changePatient,
   },
   actions: {
 

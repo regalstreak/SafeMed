@@ -15,62 +15,82 @@
                 <v-container grid-list-md>
                   <v-layout wrap>
                     <v-flex xs12 sm6 md4>
-                      <v-text-field v-model="doctorName" label="Doctor Name" required></v-text-field>
-                      <v-text-field v-model="hospitalName" label="Hospital Name" required></v-text-field>
-                      <v-text-field v-model="diagnosis" label="Diagnosis" required></v-text-field>
+                      <v-form ref="form" v-model="valid">
+                        <v-text-field
+                          v-model="doctorName"
+                          label="Doctor Name"
+                          required
+                          :rules="[rules.required]"
+                        ></v-text-field>
+                        <v-text-field
+                          v-model="hospitalName"
+                          label="Hospital Name"
+                          required
+                          :rules="[rules.required]"
+                        ></v-text-field>
+                        <v-text-field
+                          v-model="diagnosis"
+                          label="Diagnosis"
+                          required
+                          :rules="[rules.required]"
+                        ></v-text-field>
 
-                      <v-menu
-                        ref="menu"
-                        :close-on-content-click="false"
-                        v-model="menu"
-                        :nudge-right="40"
-                        :return-value.sync="dateIn"
-                        lazy
-                        transition="scale-transition"
-                        offset-y
-                        full-width
-                        min-width="290px"
-                      >
-                        <v-text-field
-                          slot="activator"
-                          v-model="dateIn"
-                          solo
-                          label="Date In"
-                          append-icon="event"
-                          readonly
-                        ></v-text-field>
-                        <v-date-picker v-model="dateIn" no-title scrollable>
-                          <v-spacer></v-spacer>
-                          <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
-                          <v-btn flat color="primary" @click="$refs.menu.save(dateIn)">OK</v-btn>
-                        </v-date-picker>
-                      </v-menu>
-                      <v-menu
-                        ref="menu2"
-                        :close-on-content-click="false"
-                        v-model="menu2"
-                        :nudge-right="40"
-                        :return-value.sync="dateOut"
-                        lazy
-                        transition="scale-transition"
-                        offset-y
-                        full-width
-                        min-width="290px"
-                      >
-                        <v-text-field
-                          slot="activator"
-                          v-model="dateOut"
-                          solo
-                          label="Picker in menu"
-                          append-icon="event"
-                          readonly
-                        ></v-text-field>
-                        <v-date-picker v-model="dateOut" no-title scrollable>
-                          <v-spacer></v-spacer>
-                          <v-btn flat color="primary" @click="menu2 = false">Cancel</v-btn>
-                          <v-btn flat color="primary" @click="$refs.menu2.save(dateOut)">OK</v-btn>
-                        </v-date-picker>
-                      </v-menu>
+                        <v-menu
+                          ref="menu"
+                          :close-on-content-click="false"
+                          v-model="menu"
+                          :nudge-right="40"
+                          :return-value.sync="dateIn"
+                          lazy
+                          transition="scale-transition"
+                          offset-y
+                          full-width
+                          min-width="290px"
+                        >
+                          <v-text-field
+                            slot="activator"
+                            v-model="dateIn"
+                            label="Date In"
+                            append-icon="event"
+                            readonly
+                          ></v-text-field>
+                          <v-date-picker v-model="dateIn" scrollable :rules="[rules.required]">
+                            <v-spacer></v-spacer>
+                            <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
+                            <v-btn flat color="primary" @click="$refs.menu.save(dateIn)">OK</v-btn>
+                          </v-date-picker>
+                        </v-menu>
+                        <v-menu
+                          ref="menu2"
+                          :close-on-content-click="false"
+                          v-model="menu2"
+                          :nudge-right="40"
+                          :return-value.sync="dateOut"
+                          lazy
+                          transition="scale-transition"
+                          offset-y
+                          full-width
+                          min-width="290px"
+                        >
+                          <v-text-field
+                            slot="activator"
+                            v-model="dateOut"
+                            label="Date Out"
+                            append-icon="event"
+                            readonly
+                          ></v-text-field>
+                          <v-date-picker
+                            v-model="dateOut"
+                            no-title
+                            scrollable
+                            :rules="[rules.required]"
+                          >
+                            <v-spacer></v-spacer>
+                            <v-btn flat color="primary" @click="menu2 = false">Cancel</v-btn>
+                            <v-btn flat color="primary" @click="$refs.menu2.save(dateOut)">OK</v-btn>
+                          </v-date-picker>
+                        </v-menu>
+                      </v-form>
                     </v-flex>
                   </v-layout>
                 </v-container>
@@ -129,7 +149,13 @@ export default {
       menu2: false,
       doctorName: "",
       hospitalName: "",
-      diagnosis: ""
+      diagnosis: "",
+      rules: {
+        required: value => !!value || "Required.",
+        min: v => v.length >= 1 || "Minimum 1 character required.",
+        number: n => !isNaN(n) || "Number expected!"
+      },
+      valid: false
     };
   },
   methods: {
@@ -156,6 +182,7 @@ export default {
 
     async addShit() {
       this.dialog = false;
+
       let accounts = await web3.eth.getAccounts();
       let pinstance = await patient(this.contractAddress);
       console.log(accounts[0] === this.contractAddress);
@@ -166,17 +193,21 @@ export default {
       let ourdateIn = this.dateIn;
       let ourdateOut = this.dateOut;
       console.log(pinstance);
-      await pinstance.methods
-        .add_record_visit(
-          ourDoc,
-          ourHospital,
-          ourDiagnosis,
-          ourdateIn,
-          ourdateOut
-        )
-        .send({ from: accounts[0], gasLimit: "4700000" })
-        .then(res => console.log(res))
-        .catch(err => console.log(err));
+      if (this.$refs.form.validate()) {
+        await pinstance.methods
+          .add_record_visit(
+            ourDoc,
+            ourHospital,
+            ourDiagnosis,
+            ourdateIn,
+            ourdateOut
+          )
+          .send({ from: accounts[0], gasLimit: "4700000" })
+          .then(res => console.log(res))
+          .catch(err => console.log(err));
+      } else {
+        console.log("Form is invalid ");
+      }
     },
 
     async onFilePicked(event) {
@@ -221,6 +252,17 @@ export default {
         return store.getters.contractAddressState;
       },
       set() {}
+    }
+  },
+  async created() {
+    let accounts = await web3.eth.getAccounts();
+    if (this.$store.getters.changePatient) {
+      console.log("CHANGE PATIENT ADDRESS STATE TRUE")
+    } else {
+      this.$store.commit("changePatientAddressState", accounts[0]);
+      console.log(
+        "CHANGED PATIENT ADDRESS TO: " + this.$store.getters.patientAddressState
+      );
     }
   }
 };
