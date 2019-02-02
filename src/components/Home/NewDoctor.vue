@@ -17,13 +17,8 @@
             required
           ></v-checkbox>
 
-          <v-btn :disabled="!valid" color="success" @click="validate">Validate</v-btn>
-
-          <v-btn color="error" @click="reset">Reset Form</v-btn>
-
           <v-btn @click="submitShit">Submit</v-btn>
 
-          <v-btn color="warning" @click="resetValidation">Reset Validation</v-btn>
         </v-form>
       </v-flex>
     </v-layout>
@@ -50,17 +45,6 @@ export default {
     save(date) {
       this.$refs.menu.save(date);
     },
-    validate() {
-      if (this.$refs.form.validate()) {
-        this.snackbar = true;
-      }
-    },
-    reset() {
-      this.$refs.form.reset();
-    },
-    resetValidation() {
-      this.$refs.form.resetValidation();
-    },
     async submitShit() {
       console.log("sadasd");
       let accounts = await web3.eth.getAccounts();
@@ -76,6 +60,7 @@ export default {
         .then(res => console.log(res))
         .catch(err => console.log(err));
       console.log(ourName);
+
     }
   },
   watch: {

@@ -1,6 +1,8 @@
 <template>
-  <v-card height="200px" flat>
-    <div class="headline text-xs-center pa-5">Active: {{ bottomNav }}</div>
+  <div>
+
+    <a href="https://imgbb.com/"><img src="https://i.ibb.co/NmqQvKq/photo-2019-01-06-09-06-50.jpg" alt="photo-2019-01-06-09-06-50" border="0"></a>
+
     <v-bottom-nav :active.sync="bottomNav" :value="true" fixed>
       <v-btn color="teal" @click="homeClicked" flat value="home">
         <span>Home</span>
@@ -22,7 +24,7 @@
         <v-icon>person</v-icon>
       </v-btn>
     </v-bottom-nav>
-  </v-card>
+  </div>
 </template>
 
 <script>
@@ -51,9 +53,7 @@ export default {
       get() {
         return store.getters.bottomNavState;
       },
-      set() {
-        
-      }
+      set() {}
     }
   }
 };

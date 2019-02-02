@@ -1,53 +1,58 @@
 <template>
-  <v-container>
-    <v-timeline dense class="pb-4">
-      <v-timeline-item
-        v-for="(y, index2) in images"
-        :key="index2"
-        color="teal lighten--1"
-        fill-dot
-        right
-      >
-        <v-card>
-          <v-card-title class="teal lighten--1">
-            <v-layout column>
-              <v-flex xs6 justify-end align-end>
-                <h2 class="display-1 white--text">{{ y[1] }}</h2>
-              </v-flex>
-            </v-layout>
-          </v-card-title>
-          <v-container>
-            <v-layout column>
-              <v-img :src="fetchData(y[1])" aspect-ratio="1.7"></v-img>
-            </v-layout>
-          </v-container>
-        </v-card>
-      </v-timeline-item>
-    </v-timeline>
+  <v-container fluid>
+    <v-slide-y-transition mode="out-in">
+      <v-layout column>
+        <v-list light>
+          <v-list-tile
+            v-for="(item, index) in 4 "
+            :key="index"
+            avatar
+            @click="navigate(item)"
+          >
+            <v-list-tile-avatar>
+              <v-icon class="blue white--text">folder</v-icon>
+            </v-list-tile-avatar>
+
+            <v-list-tile-content>
+              <v-list-tile-title>{{ item }}</v-list-tile-title>
+              <v-list-tile-sub-title>Folder</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
+      </v-layout>
+    </v-slide-y-transition>
   </v-container>
 </template>
 
 <script>
 import patient from "/home/regalstreak/development/web/safemed/safemed/src/util/patient.js";
 import web3 from "/home/regalstreak/development/web/safemed/safemed/src/util/getWeb3";
+import factory from "/home/regalstreak/development/web/safemed/safemed/src/util/factory"
 export default {
   async mounted() {
     console.log("232332434");
     console.log(this.contractAddress);
+    let add=await factory.methods._patientsMapping[this.contractAddress].call();
+    console.log(add);
     let patientIn = patient(this.contractAddress);
-    let accounts = await web3.eth.getAccounts();
-    let _totalhashes = await patientIn.methods._totalHashes().call({});
-    console.log(_totalhashes)
+        console.log("232332434");
+
+    let _totalhashes = await patientIn.methods._totalHashes();
+        console.log("232332434");
+
+    console.log(_totalhashes);    console.log("232332434");
+
     let returned;
     for (let i = _totalhashes - 1; i >= 0; i--) {
       console.log("someshloli");
-      returned = await patientIn.methods.getHash(i).call({
-        from: accounts[0]
+      returned = await patientIn.methods.getHash(i).send({
+        from: this.contractAddress,gasLimit:'4700000'
       });
 
       this.images.push(returned);
     }
     console.log(this.images);
+    console.log(_totalhashes);
 
     // doctorsName: "",
     // hospital: "",
