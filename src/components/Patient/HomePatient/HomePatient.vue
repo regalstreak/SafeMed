@@ -257,7 +257,7 @@ export default {
   async created() {
     let accounts = await web3.eth.getAccounts();
     if (this.$store.getters.changePatient) {
-      console.log("CHANGE PATIENT ADDRESS STATE TRUE")
+      console.log("CHANGE PATIENT ADDRESS STATE TRUE");
     } else {
       this.$store.commit("changePatientAddressState", accounts[0]);
       console.log(

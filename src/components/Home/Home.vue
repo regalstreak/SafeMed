@@ -3,11 +3,18 @@
     <v-layout column text-xs-center fill-height>
       <v-flex xs4></v-flex>
       <v-flex xs2>
-        <v-layout column>
-          <v-img aspect-ratio="5" :src="require('../../assets/logo.png')" class="display-2 mb-3"></v-img>
-          <v-btn to="/new-patient" color="black" dark>New Patient</v-btn>
-          <v-btn to="/new-doctor" color="blue" dark>New Doctor</v-btn>
-          <v-btn @click="login" color="red" dark>Login</v-btn>
+        <v-layout justify-center class="text-xs-center">
+          <v-flex md3 justify-center class="text-xs-center">
+            <v-img
+              aspect-ratio="5"
+              :max-width="500"
+              :src="require('../../assets/logo.png')"
+              class="display-2 mb-3 text-xs-center"
+            ></v-img>
+            <v-btn block to="/new-patient" color="black" dark>New Patient</v-btn>
+            <v-btn block to="/new-doctor" color="blue" dark>New Doctor</v-btn>
+            <v-btn block @click="login" color="red" dark>Login</v-btn>
+          </v-flex>
         </v-layout>
       </v-flex>
     </v-layout>

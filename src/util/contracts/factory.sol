@@ -83,15 +83,15 @@ contract Patient{
     function get_record(uint index)public view restrict returns(
         string, string, string, uint, string, string
         ){
-            return(
-                visit[index]._docname,
-                visit[index]._hospital,
-                visit[index]._daignos,
-                visit[index]._time,
-                visit[index]._datein,
-                visit[index]._dateout
-                );
-        }
+        return(
+            visit[index]._docname,
+            visit[index]._hospital,
+            visit[index]._daignos,
+            visit[index]._time,
+            visit[index]._datein,
+            visit[index]._dateout
+        );
+    }
 
     modifier restrict(){
         require((msg.sender == _patient) || _doctors[msg.sender]);
