@@ -1,8 +1,14 @@
 <template>
   <div>
-
-    <a href="https://imgbb.com/"><img src="https://i.ibb.co/NmqQvKq/photo-2019-01-06-09-06-50.jpg" alt="photo-2019-01-06-09-06-50" border="0"></a>
-
+    <!-- <a href="https://imgbb.com/">
+      <img
+        src="https://i.ibb.co/NmqQvKq/photo-2019-01-06-09-06-50.jpg"
+        alt="photo-2019-01-06-09-06-50"
+        border="0"
+      >
+    </a>-->
+    <qrcode-vue :value="account" :size="100" level="H"></qrcode-vue>
+    {{ account }}
     <v-bottom-nav :active.sync="bottomNav" :value="true" fixed>
       <v-btn color="teal" @click="homeClicked" flat value="home">
         <span>Home</span>
@@ -29,7 +35,17 @@
 
 <script>
 import store from "../../../store.js";
+import web3 from "../../../util/getWeb3.js";
+import QrcodeVue from "qrcode.vue";
 export default {
+  data() {
+    return {
+      account: ""
+    };
+  },
+  components: {
+    QrcodeVue
+  },
   methods: {
     homeClicked() {
       this.$store.commit("changeBottomNavState", "home");
@@ -55,6 +71,12 @@ export default {
       },
       set() {}
     }
+  },
+
+  async mounted() {
+    const accounts = await web3.eth.getAccounts();
+    this.account = accounts[0];
+    console.log("ACCOUNT: " + accounts[0]);
   }
 };
 </script>

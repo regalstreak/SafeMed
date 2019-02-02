@@ -18,11 +18,14 @@
 import web3 from "../../util/getWeb3";
 import factory from "../../util/factory.js";
 export default {
+  data() {
+    return {};
+  },
   methods: {
     async login() {
       let accounts = await web3.eth.getAccounts();
       console.log(accounts);
-      let contractAddress;
+      var contractAddress;
       if (
         (await factory.methods._patientsMapping(accounts[0]).call()) !=
         0x0000000000000000000000000000000000000000
@@ -31,6 +34,7 @@ export default {
         contractAddress = await factory.methods
           ._patientsMapping(accounts[0])
           .call();
+        console.log("oye hoye" + contractAddress);
         this.$store.commit("changeContractAddressState", contractAddress);
         this.$router.push("/patient");
         return;
@@ -44,7 +48,7 @@ export default {
           .call();
         this.$store.commit("changeContractAddressState", contractAddress);
         this.$router.push("/doctor");
-        return ;
+        return;
       } else {
         console.log("bhosdika");
       }
